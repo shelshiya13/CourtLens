@@ -1,0 +1,36 @@
+@theme {
+  --color-navy: #14213D;
+  --color-navy-light: #1E2D4A;
+  --color-charcoal: #2B2D33;
+  --color-charcoal-muted: #5C5E66;
+  --color-ivory: #FAF7F0;
+  --color-paper: #FFFFFF;
+  --color-brass: #B08D57;
+  --color-brass-light: #DFCEB0;
+  --color-brass-dark: #8C6A35;
+  --color-legal-border: #E4DFD3;
+  --color-legal-border-subtle: #EDE9DF;
+  --color-conflict-red: #9B2C2C;
+  --color-conflict-bg: #FDF2F2;
+  --color-conflict-border: #F8B4B4;
+  --color-verified-green: #2F6B4F;
+  --color-verified-bg: #F0FDF4;
+  --color-verified-border: #BCF0DA;
+  --color-warning-amber: #B7791F;
+  --color-warning-bg: #FEFCE8;
+  --color-warning-border: #FCE96A;
+  --color-neutral-slate: #475569;
+  --color-neutral-bg: #F1F5F9;
+  --font-serif: "Libre Baskerville", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  --color-navy: #14213D;
+  --color-charcoal: #2B2D33;
+  --color-ivory: #FAF7F0;
+  --color-paper: #FFFFFF;
+  --color-brass: #B08D57;
+  --color-legal-border: #E4DFD3;
+}

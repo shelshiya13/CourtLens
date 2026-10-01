@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-charcoal);
+  background-color: var(--color-ivory);
+  min-height: 100vh;
+}
+
+h1, h2, h3, .font-legal-heading {
+  font-family: var(--font-serif);
+}
+
+code, pre, .font-legal-mono {
+  font-family: var(--font-mono);
+}
+
+/* Subtle brass top accent for document cards */
+.card-brass-top {
+  position: relative;
+}
+.card-brass-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-brass);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}

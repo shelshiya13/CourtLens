@@ -1,0 +1,102 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiRequest, setAuthToken, clearAuthToken } from './api.js';
+
+export interface User {
+  userId: string;
+  role: 'lawyer' | 'guardian';
+  name: string;
+  email?: string;
+  mobile?: string;
+}
+
+interface AuthResponse {
+  user: User;
+  token?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  loginLawyer: (email: string, pass: string) => Promise<void>;
+  registerLawyer: (name: string, email: string, pass: string, enrolmentId?: string) => Promise<void>;
+  verifyGuardianOtp: (identifier: string, code: string) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const refreshUser = async () => {
+    try {
+      const res = await apiRequest<{ user: User }>('/api/auth/me');
+      setUser(res.user);
+    } catch {
+      clearAuthToken();
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshUser();
+  }, []);
+
+  const loginLawyer = async (email: string, pass: string) => {
+    const res = await apiRequest<AuthResponse>('/api/auth/lawyer/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password: pass })
+    });
+    if (res.token) {
+      setAuthToken(res.token);
+    }
+    setUser(res.user);
+  };
+
+  const registerLawyer = async (name: string, email: string, pass: string, enrolmentId?: string) => {
+    const res = await apiRequest<AuthResponse>('/api/auth/lawyer/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password: pass, enrolmentId })
+    });
+    if (res.token) {
+      setAuthToken(res.token);
+    }
+    setUser(res.user);
+  };
+
+  const verifyGuardianOtp = async (identifier: string, code: string) => {
+    const res = await apiRequest<AuthResponse>('/api/auth/guardian/otp/verify', {
+      method: 'POST',
+      body: JSON.stringify({ identifier, code })
+    });
+    if (res.token) {
+      setAuthToken(res.token);
+    }
+    setUser(res.user);
+  };
+
+  const logout = async () => {
+    try {
+      await apiRequest('/api/auth/logout', { method: 'POST' });
+    } finally {
+      clearAuthToken();
+      setUser(null);
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, loginLawyer, registerLawyer, verifyGuardianOtp, logout, refreshUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
+};
